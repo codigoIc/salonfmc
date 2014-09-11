@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>PRODIM - GALERIA DE IMAGENES</title>
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>Galeria de imagenes</title>
+		<link rel="stylesheet" href="css/basic.css" type="text/css" />
+		<link rel="stylesheet" href="css/galleriffic-5.css" type="text/css" />
+		
+		<!-- <link rel="stylesheet" href="css/white.css" type="text/css" /> -->
+		<link rel="stylesheet" href="css/black.css" type="text/css" />
+		
+
+		<!-- We only want the thunbnails to display when javascript is disabled -->
+		<script type="text/javascript">
+			document.write('<style>.noscript { display: none; }</style>');
+		</script>
+	</head>
+</head>
+<body>
+<br><br><br><br>	<h2>Galerias Disponibles </h2>
+<br><br>
+	<a href="index.php?query=auto"><img src="../imagenes/galeria.jpg" border="0">&nbsp;&nbsp;<font size="+1">Retratos</a><br><br>
+	<a href="index.php?query=paris"><img src="../imagenes/galeria.jpg" border="0">&nbsp;&nbsp;Grupo Par&iacute;s</a><br><br>
+	<a href="index.php?query=orion"><img src="../imagenes/galeria.jpg" border="0">&nbsp;&nbsp;Grupo Ori&oacute;n</a><br><br>
+	<a href="index.php?query=puey"><img src="../imagenes/galeria.jpg" border="0">&nbsp;&nbsp;Prilidiano Pueyrred&oacute;n</a><br><br>
+
+</body>
+</html>

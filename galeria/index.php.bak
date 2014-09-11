@@ -1,0 +1,233 @@
+<?php
+session_start();
+include('../html/libs/conf.php');
+switch ($_REQUEST['query']) {
+    case 'orion':
+        $sql="SELECT a.nombre as autor,i.* FROM inventario i join autores a on i.id_autor=a.id
+		where (a.nombre like '%Barragán%' or a.nombre like '%Venier%' or a.nombre like '%Forte%' or a.nombre like '%Presas%' or a.nombre like '%Ideal Sánchez%' or a.nombre like '%Pierri%' or a.nombre like '%Miceli%' or a.nombre like '%Altalef %' or a.nombre like '%Fuentes%'	or a.nombre like '%Ernesto B. Rodríguez%' or a.nombre like '%Aschero%' or a.nombre like '%Alegre%' ) and fotografia != 'graficos/sin_foto.jpg'";
+		$titulo="Grupo Orion";
+        break;
+    case 'paris':
+       	$sql="SELECT a.nombre as autor,i.* FROM inventario i join autores a on i.id_autor=a.id where (a.nombre like '%Petorutti%' or a.nombre like '%Butler%' or a.nombre like '%Basaldua%' or a.nombre like '%Badi%' or a.nombre like '%Spilimbergo%' or a.nombre like '%Dominguez Neira%' or a.nombre like '%Berni%' or a.nombre like '%Forner%' or a.nombre like '%Guttero%' or a.nombre like '%Bigatti%' or a.nombre like '%Pissarro%' or a.nombre like '%Forner%' or a.nombre like '%Del Prete%')
+		and fotografia != 'graficos/sin_foto.jpg'";
+		$titulo="Grupo Paris";
+        break;
+    case 'auto':
+       	$sql = "SELECT * FROM inventario where fotografia like '%/001/05/32/10/668%'";
+		$titulo="Autoretratos";
+		    break;
+    case 'puey':
+       	$sql="SELECT a.nombre as autor,i.* FROM inventario i join autores a on i.id_autor=a.id where (a.nombre like '%Pueyrredon%') and fotografia != 'graficos/sin_foto.jpg'";
+		$titulo="Prilidiano Pueyrredón";
+		    break;
+
+    case 'arqueo':
+       	$sql="SELECT a.nombre as autor,i.* FROM inventario i join autores a on i.id_autor=a.id
+where i.grupo1='09' and fotografia != 'graficos/sin_foto.jpg'";
+		$titulo="Piezas arqueol&oacute;gicas";
+		    break;
+
+
+
+}
+
+?>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>Galeria de imagenes</title>
+		<link rel="stylesheet" href="css/basic.css" type="text/css" />
+		<link rel="stylesheet" href="css/galleriffic-5.css" type="text/css" />
+		
+		<!-- <link rel="stylesheet" href="css/white.css" type="text/css" /> -->
+		<link rel="stylesheet" href="css/black.css" type="text/css" />
+		
+		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+		<script type="text/javascript" src="js/jquery.history.js"></script>
+		<script type="text/javascript" src="js/jquery.galleriffic.js"></script>
+		<script type="text/javascript" src="js/jquery.opacityrollover.js"></script>
+		<!-- We only want the thunbnails to display when javascript is disabled -->
+		<script type="text/javascript">
+			document.write('<style>.noscript { display: none; }</style>');
+		</script>
+	</head>
+	<body>
+	<?
+$sql=$sql." order by fecha_modifi desc limit 20";
+echo $sql;
+$resul=mysql_query($sql) or die('Fallo la busqueda de piezas');
+$row=mysql_fetch_array($resul) ; 
+$cuantos =mysql_num_rows($resul); 
+$contador=0;
+
+?>
+<a href="../presentacion/"><< Volver al menu</a>
+		<div id="page">
+			<div id="container">
+				<h2>Galeria : <?echo $titulo?></h2>
+				
+				<!-- Start Advanced Gallery Html Containers -->				
+				<div class="navigation-container">
+					<div id="thumbs" class="navigation">
+						<a class="pageLink prev" style="visibility: hidden;" href="#" title="Pagina Previa"></a>
+					
+						<ul class="thumbs noscript">
+						<? while ($contador < $cuantos){ ?>	
+							<li>
+								<a class="thumb" name="leaf" href="<?echo "../html/".$row['fotografia']?>" title="<?echo $row['nombre'] ?>">
+									<img src="<?echo "../html/".$row['fotografia']?>" alt="<?echo $row['nombre']?>" width="50px" height="50px"/>
+								</a>
+								<div class="caption">
+									<div class="image-title"><?echo $row['nombre'] ?></div>
+									<div class="image-desc"><?echo $row['descripcion'] ?></div>
+									<?if ($row['autor']!=''){?>
+									<div class="image-desc"><?echo "Autor : ".$row['autor'] ?></div>
+									<?}?>
+									<div class="download"></div>
+								</div>
+							</li>
+						<?
+						$row=mysql_fetch_array($resul);
+						$contador=$contador + 1;
+						}?>
+						</ul>
+						<a class="pageLink next" style="visibility: hidden;" href="#" title="Next Page"></a>
+					</div>
+				</div>
+				<div class="content">
+					<div class="slideshow-container">
+						<div id="controls" class="controls"></div>
+						<div id="loading" class="loader"></div>
+						<div id="slideshow" class="slideshow"></div>
+					</div>
+					<div id="caption" class="caption-container">
+						<div class="photo-index"></div>
+					</div>
+				</div>
+				<!-- End Gallery Html Containers -->
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				// We only want these styles applied when javascript is enabled
+				$('div.content').css('display', 'block');
+
+				// Initially set opacity on thumbs and add
+				// additional styling for hover effect on thumbs
+				var onMouseOutOpacity = 0.67;
+				$('#thumbs ul.thumbs li, div.navigation a.pageLink').opacityrollover({
+					mouseOutOpacity:   onMouseOutOpacity,
+					mouseOverOpacity:  1.0,
+					fadeSpeed:         'fast',
+					exemptionSelector: '.selected'
+				});
+				
+				// Initialize Advanced Galleriffic Gallery
+				var gallery = $('#thumbs').galleriffic({
+					delay:                     2500,
+					numThumbs:                 10,
+					preloadAhead:              10,
+					enableTopPager:            false,
+					enableBottomPager:         false,
+					imageContainerSel:         '#slideshow',
+					controlsContainerSel:      '#controls',
+					captionContainerSel:       '#caption',
+					loadingContainerSel:       '#loading',
+					renderSSControls:          true,
+					renderNavControls:         true,
+					playLinkText:              'Modo Presentacion',
+					pauseLinkText:             'Pausar ',
+					prevLinkText:              '< Imagen Previa',
+					nextLinkText:              'Siguiente Imagen >',
+					nextPageLinkText:          'Siguiente >;',
+					prevPageLinkText:          '< Previa',
+					enableHistory:             true,
+					autoStart:                 false,
+					syncTransitions:           true,
+					defaultTransitionDuration: 900,
+					onSlideChange:             function(prevIndex, nextIndex) {
+						// 'this' refers to the gallery, which is an extension of $('#thumbs')
+						this.find('ul.thumbs').children()
+							.eq(prevIndex).fadeTo('fast', onMouseOutOpacity).end()
+							.eq(nextIndex).fadeTo('fast', 1.0);
+
+						// Update the photo index display
+						this.$captionContainer.find('div.photo-index')
+							.html('Imagen '+ (nextIndex+1) +' de '+ this.data.length);
+					},
+					onPageTransitionOut:       function(callback) {
+						this.fadeTo('fast', 0.0, callback);
+					},
+					onPageTransitionIn:        function() {
+						var prevPageLink = this.find('a.prev').css('visibility', 'hidden');
+						var nextPageLink = this.find('a.next').css('visibility', 'hidden');
+						
+						// Show appropriate next / prev page links
+						if (this.displayedPage > 0)
+							prevPageLink.css('visibility', 'visible');
+
+						var lastPage = this.getNumPages() - 1;
+						if (this.displayedPage < lastPage)
+							nextPageLink.css('visibility', 'visible');
+
+						this.fadeTo('fast', 1.0);
+					}
+				});
+
+				/**************** Event handlers for custom next / prev page links **********************/
+
+				gallery.find('a.prev').click(function(e) {
+					gallery.previousPage();
+					e.preventDefault();
+				});
+
+				gallery.find('a.next').click(function(e) {
+					gallery.nextPage();
+					e.preventDefault();
+				});
+
+				/****************************************************************************************/
+
+				/**** Functions to support integration of galleriffic with the jquery.history plugin ****/
+
+				// PageLoad function
+				// This function is called when:
+				// 1. after calling $.historyInit();
+				// 2. after calling $.historyLoad();
+				// 3. after pushing "Go Back" button of a browser
+				function pageload(hash) {
+					// alert("pageload: " + hash);
+					// hash doesn't contain the first # character.
+					if(hash) {
+						$.galleriffic.gotoImage(hash);
+					} else {
+						gallery.gotoIndex(0);
+					}
+				}
+
+				// Initialize history plugin.
+				// The callback is called at once by present location.hash. 
+				$.historyInit(pageload, "advanced.html");
+
+				// set onlick event for buttons using the jQuery 1.3 live method
+				$("a[rel='history']").live('click', function(e) {
+					if (e.button != 0) return true;
+
+					var hash = this.href;
+					hash = hash.replace(/^.*#/, '');
+
+					// moves to a new page. 
+					// pageload is called at once. 
+					// hash don't contain "#", "?"
+					$.historyLoad(hash);
+
+					return false;
+				});
+
+				/****************************************************************************************/
+			});
+		</script>
+	</body>
+</html>
